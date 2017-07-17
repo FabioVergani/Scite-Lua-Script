@@ -1,0 +1,63 @@
+local m={
+' ','nbsp',
+'&','amp',
+'"','quot',
+'<','lt',
+'>','gt',
+'‘','lsquo',
+'’','rsquo',
+'“','ldquo',
+'”','rdquo',
+'‹','lsaquo',
+'›','rsaquo',
+'«','laquo',
+'»','raquo',
+'„','bdquo',
+'‚','sbquo',
+'·','middot',
+'…','hellip',
+'§','sect',
+'©','copy',
+'®','reg',
+'™','trade',
+'¦','brvbar',
+'†','dagger',
+'‡','Dagger',
+'¬','not',
+'­','shy',
+'±','plusmn',
+'µ','micro',
+'‰','permil',
+'°','deg',
+'ˆ','euro',
+'¤','curren',
+'•','bull'
+}
+
+--output:ClearAll()
+local s=''
+for i=1,#m,2 do
+ s=s..m[i]..';'
+end
+--print(s)
+
+editor.AutoCSeparator=string.byte(';')
+editor:UserListShow(12,s)
+editor.AutoCSeparator=string.byte(' ')
+
+function OnUserListSelection(a,b)
+ if a == 12 then
+	local p = editor.CurrentPos
+	if editor.Lexer == SCLEX_HTML then
+	 for i=1,#m,2 do
+		if m[i] == b then
+		 b='&'..m[i+1]..';'
+		 break
+		end
+	 end
+	end
+	editor:InsertText(p,b)
+	p = p + string.len(b)
+	editor:SetSel(p,p)
+ end
+end
