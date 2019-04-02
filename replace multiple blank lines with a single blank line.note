@@ -1,0 +1,25 @@
+This LUA script will replace multiple blank lines with a single blank line and it will leave single blank lines as-is.
+I added this to the Tools.lua 
+
+function del_empty_lines()
+  local txt = editor:GetText()
+  if #txt == 0 then return end
+  local chg, n = false
+  while true do
+    txt, n = string.gsub(txt, "(\r?\n\r?\n)%s*\r?\n", "%1")
+    if n == 0 then break end
+    chg = true
+  end
+  if chg then
+    editor:SetText(txt)
+    editor:GotoPos(0)
+  end
+end
+
+and added the following to the SciteUser.properties file so I can call it using a right click menu in SciTE.
+
+# 46 Remove Empty Lines
+# command.name.46.*=Remove Empty Lines
+command.46.*=del_empty_lines
+command.subsystem.46.*=3
+user.context.menu=||Add as Snippet|1116|Remove Empty Lines|1146|
